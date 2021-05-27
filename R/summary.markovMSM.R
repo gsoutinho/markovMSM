@@ -20,8 +20,8 @@
 #' status=c(NA, "rec.s", "ae.s", "recae.s","rel.s", "srv.s")
 #' trans = tmat
 #' db_long<- prepMSM(data=db_wide, trans, timesNames, status)
-#' res<-globalTestAUC(db_long, db_wide, from=2, to=3, quantiles=c(.05, .10, .20, .30, 0.40), 
-#'                 tmat = tmat, replicas = 20, positions=positions, namesStates=namesStates,
+#' res<-global.test(db_long, db_wide, from=2, to=3, quantiles=c(.05, .10, .20, .30, 0.40), 
+#'                 tmat = tmat, replicas = 5, positions=positions, namesStates=namesStates,
 #'                 timesNames=timesNames,status=status)
 #' summary(res)
 #' 
