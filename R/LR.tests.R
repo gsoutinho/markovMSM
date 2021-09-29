@@ -1,8 +1,8 @@
 #' Log-rank based test for the validity of the Markov assumption
-#' @description  Function MarkovTest performs the log-rank test described in Titman & Putter
-#' (2020). Function optimal_weights_matrix implements the optimal weighting for
-#' the state-specific trace. Function optimal_weights_multiple implements the
-#' optimal weighting for the chi-squared trace.
+#' @description  Function MarkovTest performs the log-rank test described in
+#' Titman & Putter (2020). Function optimal_weights_matrix implements the optimal
+#' weighting for the state-specific trace. Function optimal_weights_multiple
+#' implements the optimal weighting for the chi-squared trace.
 #' @aliases MarkovTest optimal_weights_multiple optimal_weights_matrix
 #' @param db_long Multi-state data in \code{msdata} format. Should also contain
 #' (dummy codings of) the relevant covariates; no factors allowed.

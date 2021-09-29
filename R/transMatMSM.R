@@ -1,15 +1,19 @@
 #' Define transition matrix for multi-state model.
 #'
-#' @description Define transition matrices for multi-state model. Specific functions for defining 
-#' such transition matrices are pre-defined for common multi-state models like the competing risks 
-#' model and the illness-death model.
+#' @description Define transition matrices for multi-state model. Specific
+#' functions for defining  such transition matrices are pre-defined for common
+#' multi-state models like the competing risks model and the illness-death model.
 #'
-#' @param positions List of possible transitions; x[[i]] consists of a vector of state numbers reachable from state i.
-#' @param namesStates A character vector containing the names of either the competing risks or the states in the 
-#' multi-state model specified by the competing risks or illness-death model. names should have the same 
-#' length as the list x (for transMat), or either K or K+1 (for trans.comprisk), or 3 (for trans.illdeath).
+#' @param positions List of possible transitions; x[[i]] consists of a vector of
+#' state numbers reachable from state i.
+#' @param namesStates A character vector containing the names of either the
+#' competing risks or the states in the multi-state model specified by the
+#' competing risks or illness-death model. names should have the same 
+#' length as the list x (for transMat), or either K or K+1 (for trans.comprisk),
+#' or 3 (for trans.illdeath).
 
-#' @return A transition matrix describing the states and transitions in the multi-state model.
+#' @return A transition matrix describing the states and transitions in the
+#' multi-state model.
 #'
 #' @examples
 #' data("ebmt4")

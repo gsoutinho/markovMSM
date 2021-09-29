@@ -1,27 +1,36 @@
-#' Function to prepare dataset for multi-state modeling in long format from dataset in wide format.
+#' Function to prepare data set for multi-state modeling in long format from
+#' data set in wide format.
 #'
-#' @description This function converts a dataset which is in wide format (one subject per line, multiple
-#' columns indicating time and status for different states) into a dataset in long format (one line for
-#' each transition for which a subject is at risk). Selected covariates are replicated per subjects.
+#' @description This function converts a data set which is in wide format (one
+#' subject per line, multiple columns indicating time and status for different
+#' states) into a data set in long format (one line for each transition for which
+#' a subject is at risk). Selected covariates are replicated per subjects.
 #'
-#' @param data Data frame in wide format in which to interpret time, status, id or keep, if appropriate.
-#' @param trans Transition matrix describing the states and transitions in the multi-state model. If S 
-#' is the number of states in the multi-state model, trans should be an S x S matrix, with (i,j)-element 
-#' a positive integer if a transition from i to j is possible in the multi-state model, NA otherwise. In 
-#' particular, all diagonal elements should be NA. The integers indicating the possible transitions in the
-#' multi-state model should be sequentially numbered, 1,...,K, with K the number of transitions
-#' @param timesNames Either 1) a matrix or data frame of dimension n x S (n being the number of individuals 
-#' and S the number of states in the multi-state model), containing the times at which the states are 
-#' visited or last follow-up time, or 2) a character vector of length S containing the column names 
-#' indicating these times. In the latter cases, some elements of time may be NA, see Details
-#' @param status Either 1) a matrix or data frame of dimension n x S, containing, for each of the states, 
-#' event indicators taking the value 1 if the state is visited or 0 if it is not (censored), or 2) a character
-#' vector of length S containing the column names indicating these status variables. In the latter cases, some
-#' elements of status may be NA, see Details. 
+#' @param data Data frame in wide format in which to interpret time, status, id
+#' or keep, if appropriate.
+#' @param trans Transition matrix describing the states and transitions in the
+#' multi-state model. If S is the number of states in the multi-state model,
+#' trans should be an S x S matrix, with (i,j)-element a positive integer if a
+#' transition from i to j is possible in the multi-state model, NA otherwise. In
+#' particular, all diagonal elements should be NA. The integers indicating the
+#' possible transitions in the multi-state model should be sequentially numbered,
+#' 1,...,K, with K the number of transitions
+#' @param timesNames Either 1) a matrix or data frame of dimension n x S (n
+#' being the number of individuals and S the number of states in the multi-state
+#' model), containing the times at which the states are visited or last follow-up
+#' time, or 2) a character vector of length S containing the column names 
+#' indicating these times. In the latter cases, some elements of time may be NA,
+#' see Details
+#' @param status Either 1) a matrix or data frame of dimension n x S, containing,
+#' for each of the states, event indicators taking the value 1 if the state is
+#' visited or 0 if it is not (censored), or 2) a character vector of length S
+#' containing the column names indicating these status variables. In the latter
+#' cases, some elements of status may be NA, see Details. 
 
 #' 
 #' @return 
-#' An object of class "msdata", which is a data frame in long (counting process) format containing the subject
+#' An object of class "msdata", which is a data frame in long (counting process)
+#' format containing the subject
 #' id, the covariates (replicated per subject), and
 #' from	
 #' the starting state

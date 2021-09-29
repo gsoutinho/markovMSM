@@ -1,8 +1,10 @@
 #' Pritting fits of "markovMSM" class.
 #'
-#' @description Returns the formula and the methods of the Markov tests in Multi-state models.
+#' @description Returns the formula and the methods of the Markov tests in
+#' Multi-state models.
 #'
-#' @param x A object of "markovMSM" with the results of the AUC global or local tests.
+#' @param x A object of "markovMSM" with the results of the AUC global or local
+#' tests.
 #' @param ... For future methods.
 #' 
 #' @return The formula and the methods of the Markov tests in Multi-state models.
@@ -18,8 +20,9 @@
 #' status=c(NA, "rec.s", "ae.s", "recae.s","rel.s", "srv.s")
 #' trans = tmat
 #' db_long<- prepMSM(data=db_wide, trans, timesNames, status)
-#' res<-global.test(db_long, db_wide, from=2, to=3, quantiles=c(.05, .10, .20, .30, 0.40), 
-#'                 tmat = tmat, replicas = 5, positions=positions, namesStates=namesStates,
+#' res<-global.test(db_long, db_wide, from=2, to=3, quantiles=c(.05, .10, .20, 
+#'                 .30, 0.40), tmat = tmat, replicas = 5, positions=positions, 
+#'                 namesStates=namesStates,
 #'                 timesNames=timesNames,status=status)
 #' print(res)
 

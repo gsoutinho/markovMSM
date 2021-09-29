@@ -1,50 +1,66 @@
-#' Area Under the two curves (AUC) local test for checking the Markov condition on Multi-state Models.
+#' Area Under the two curves (AUC) local test for checking the Markov condition
+#' on Multi-state Models.
 #'
-#' @description This function is used to obtain the local test based on the AUC Markov Test for selected 
-#' times and transitions between states.
+#' @description This function is used to obtain the local test based on the AUC
+#' Markov Test for selected times and transitions between states.
 #'
-#' @param db_long A dataframe in long format containing the subject \code{id}; \code{from} corresponding 
-#' to the starting state; the receiving state, \code{to}; the transition number, \code{trans}; the starting
-#' time of the transition given by \code{Tstart}; the stopping time of the transition, \code{Tstop}, and
-#' \code{status} for the  status variable, with 1 indicating an event (transition), 0 a censoring. 
-#' @param db_wide Data frame in wide format in which to interpret time, status, id or keep, if appropriate.
-#' @param times The starting times of the transition probabilities for checking the local Markov assumption
-#' in Multi-state models.
+#' @param db_long A dataframe in long format containing the subject \code{id};
+#' \code{from} corresponding to the starting state; the receiving state,
+#' \code{to}; the transition number, \code{trans}; the starting time of the
+#' transition given by \code{Tstart}; the stopping time of the transition,
+#' \code{Tstop}, and \code{status} for the  status variable, with 1 indicating
+#' an event (transition), 0 a censoring. 
+#' @param db_wide Data frame in wide format in which to interpret time, status,
+#' id or keep, if appropriate.
+#' @param times The starting times of the transition probabilities for checking
+#' the local Markov assumption in Multi-state models.
 #' @param from The starting state of the transition probabilities.
-#' @param to The last receiving state considered for the estimation of the transition probabilities. All 
-#' the probabilities among the first and the last states are also computed.
+#' @param to The last receiving state considered for the estimation of the
+#' transition probabilities. All the probabilities among the first and the last
+#' states are also computed.
 #' @param tmat The transition matrix for multi-state model.
-#' @param replicas Number of replicas for the Monte Carlo simulation to standardization of the T-statistic
-#' given by the difference of the areas of AJ and LM transition probabilities estimates.
-#' @param limit Percentile of the event time used as the upper bound for the computation of the AUC-based test. 
-#' @param positions List of possible transitions; x[[i]] consists of a vector of state numbers reachable from state i.
-#' @param namesStates A character vector containing the names of either the competing risks or the states in the 
-#' multi-state model specified by the competing risks or illness-death model. names should have the same 
-#' length as the list x (for transMat), or either K or K+1 (for trans.comprisk), or 3 (for trans.illdeath). 
-#' @param timesNames Either 1) a matrix or data frame of dimension n x S (n being the number of individuals 
-#' and S the number of states in the multi-state model), containing the times at which the states are 
-#' visited or last follow-up time, or 2) a character vector of length S containing the column names 
-#' indicating these times. In the latter cases, some elements of time may be NA, see Details
-#' @param status Either 1) a matrix or data frame of dimension n x S, containing, for each of the states, 
-#' event indicators taking the value 1 if the state is visited or 0 if it is not (censored), or 2) a character
-#' vector of length S containing the column names indicating these status variables. In the latter cases, some
-#' elements of status may be NA, see Details. 
+#' @param replicas Number of replicas for the Monte Carlo simulation to
+#' standardization of the T-statistic given by the difference of the areas of AJ
+#' and LM transition probabilities estimates.
+#' @param limit Percentile of the event time used as the upper bound for the
+#' computation of the AUC-based test. 
+#' @param positions List of possible transitions; x[[i]] consists of a vector of
+#' state numbers reachable from state i.
+#' @param namesStates A character vector containing the names of either the
+#' competing risks or the states in the  multi-state model specified by the
+#' competing risks or illness-death model. names should have the same length as
+#' the list x (for transMat), or either K or K+1 (for trans.comprisk), or 3
+#' (for trans.illdeath). 
+#' @param timesNames Either 1) a matrix or data frame of dimension n x S
+#' (n being the number of individuals and S the number of states in the
+#' multi-state model), containing the times at which the states are visited or
+#' last follow-up time, or 2) a character vector of length S containing the
+#' column names indicating these times. In the latter cases, some elements of
+#' time may be NA, see Details
+#' @param status Either 1) a matrix or data frame of dimension n x S, containing,
+#' for each of the states, event indicators taking the value 1 if the state is
+#' visited or 0 if it is not (censored), or 2) a character vector of length S
+#' containing the column names indicating these status variables. In the latter
+#' cases, some elements of status may be NA, see Details. 
 #'
 #' @return An object with a list with the following outcomes:
 #' \item{localTest}{p-value of AUC local tests for each times and transitions.}
-#' \item{trans}{The transition matrix describing the states and transitions of the multi-state model.}
+#' \item{trans}{The transition matrix describing the states and transitions of
+#' the multi-state model.}
 #' \item{times}{Times selected for the AUC Local tests.}
-#' \item{DIF}{Differences between the AJ and the LMAJ estimates for each transition probabilites from the 
-#' starting state until the receiving state given by only one replica where 's' represent each of the 
-#' quantile times.}  
+#' \item{DIF}{Differences between the AJ and the LMAJ estimates for each
+#' transition probabilites from the starting state until the receiving state
+#' given by only one replica where 's' represent each of the  quantile times.}  
 #' \item{from}{The starting state considered for the AUC Local tests.}
 #' \item{to}{The last receiving state considered for the the AUC Local tests.}
-#' \item{ET.qiAll}{The lower limit of the diferences between the AJ and the LMAJ estimates given by the
-#' Monte Carlo simulation in each transition for each "s" quantile times. \code{ET.qi2All} means the same
-#' but missing values were replaced by the previous diferences of estimators.} 
-#' \item{ET.qsAll}{The upper limit of the diferences between the AJ and the LMAJ estimates given by the Monte
-#' Carlo simulation in each transition for each "s" quantile times. \code{ET.qs2All} means the same but
-#' missing values were replaced by the previous diferences of estimators.} 
+#' \item{ET.qiAll}{The lower limit of the diferences between the AJ and the LMAJ
+#' estimates given by the Monte Carlo simulation in each transition for each "s"
+#' quantile times. \code{ET.qi2All} means the same but missing values were 
+#' replaced by the previous diferences of estimators.} 
+#' \item{ET.qsAll}{The upper limit of the diferences between the AJ and the LMAJ
+#' estimates given by the Monte Carlo simulation in each transition for each "s"
+#' quantile times. \code{ET.qs2All} means the same but missing values were
+#' replaced by the previous diferences of estimators.} 
 #' \item{replicas}{Number of replicas for the Monte Carlo simulation.}
 #' \item{limit}{Percentil of the times used in the AUC local tests.}
 #' \item{x}{x.}

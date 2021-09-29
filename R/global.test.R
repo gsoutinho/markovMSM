@@ -1,49 +1,72 @@
-#' Area Under the two curves (AUC) global test for checking the Markov condition on Multi-state Models.
+#' Area Under the two curves (AUC) global test for checking the Markov condition 
+#' on Multi-state Models.
 #'
-#' @description This function is used to obtain a global test for checking the Markov condiction.
+#' @description This function is used to obtain a global test for checking the
+#' Markov condition.
 #'
-#' @param db_long A dataframe in long format containing the subject \code{id}; \code{from} corresponding 
-#' to the starting state;the receiving state, \code{to}; the transition number, \code{trans}; the 
-#' starting time of the transition given by \code{Tstart}; the stopping time of the transition, \code{Tstop},
-#' and \code{status} for the  status variable, with 1 indicating an event (transition), 0 a censoring. 
-#' @param db_wide Data frame in wide format in which to interpret time, status, id or keep, if appropriate.
+#' @param db_long A data frame in long format containing the subject \code{id};
+#' \code{from} corresponding to the starting state;the receiving state, 
+#' \code{to}; the transition number, \code{trans}; the starting time of the
+#' transition given by \code{Tstart}; the stopping time of the transition, 
+#' \code{Tstop}, and \code{status} for the  status variable, with 1 indicating
+#' an event (transition), 0 a censoring. 
+#' @param db_wide Data frame in wide format in which to interpret time, status,
+#' id or keep, if appropriate.
 #' @param from The starting state of the transition probabilities.
-#' @param to The last receiving state considered for the estimation of the transition probabilities. All 
-#' the probabilities among the first and the last states are also computed. 
-#' @param quantiles Quantiles used in the formula of the Global test for the AUC methods.
+#' @param to The last receiving state considered for the estimation of the
+#' transition probabilities. All  the probabilities among the first and the
+#' last states are also computed. 
+#' @param quantiles Quantiles used in the formula of the Global test for the
+#' AUC methods. By default takes the percentiles 0.05, .10, .20, .30, 0.40. 
+#' @param times Times between the minimum time and the third quartile times used
+#' in the formula of the Global test for the AUC methods. Default to NULL.
 #' @param tmat The transition matrix for multi-state model.
-#' @param replicas Number of replicas for the Monte Carlo simulation to standardization of the T-statistic
-#' given by the difference of the areas of AJ and LM transition probabilities estimates.
-#' @param limit Percentile of the event time used as the upper bound for the computation of the AUC-based test. 
-#' @param positions List of possible transitions; x[[i]] consists of a vector of state numbers reachable from state i.
-#' @param namesStates A character vector containing the names of either the competing risks or the states in the 
-#' multi-state model specified by the competing risks or illness-death model. names should have the same 
-#' length as the list x (for transMat), or either K or K+1 (for trans.comprisk), or 3 (for trans.illdeath). 
-#' @param timesNames Either 1) a matrix or data frame of dimension n x S (n being the number of individuals 
-#' and S the number of states in the multi-state model), containing the times at which the states are 
-#' visited or last follow-up time, or 2) a character vector of length S containing the column names 
-#' indicating these times. In the latter cases, some elements of time may be NA, see Details
-#' @param status Either 1) a matrix or data frame of dimension n x S, containing, for each of the states, 
-#' event indicators taking the value 1 if the state is visited or 0 if it is not (censored), or 2) a character
-#' vector of length S containing the column names indicating these status variables. In the latter cases, some
-#' elements of status may be NA, see Details.  
+#' @param replicas Number of replicas for the Monte Carlo simulation to
+#' standardization of the T-statistic given by the difference of the areas of
+#' AJ and LM transition probabilities estimates.
+#' @param limit Percentile of the event time used as the upper bound for the
+#' computation of the AUC-based test. 
+#' @param positions List of possible transitions; x[[i]] consists of a vector of
+#' state numbers reachable from state i.
+#' @param namesStates A character vector containing the names of either the
+#' competing risks or the states in the multi-state model specified by the
+#' competing risks or illness-death model. names should have the same length as
+#' the list x (for transMat), or either K or K+1 (for trans.comprisk), or 3
+#' (for trans.illdeath). 
+#' @param timesNames Either 1) a matrix or data frame of dimension n x S
+#' (n being the number of individuals  and S the number of states in the
+#' multi-state model), containing the times at which the states are visited or
+#' last follow-up time, or 2) a character vector of length S containing the
+#' column names  indicating these times. In the latter cases, some elements of
+#' time may be NA, see Details
+#' @param status Either 1) a matrix or data frame of dimension n x S,
+#' containing, for each of the states, event indicators taking the value 1 if
+#' the state is visited or 0 if it is not (censored), or 2) a character
+#' vector of length S containing the column names indicating these status
+#' variables. In the latter cases, some elements of status may be NA, 
+#' see Details.  
 #'
 #' @return An object with a list with the following outcomes:
-##' \item{globalTest}{p-value of AUC global tests for each transition. These values are obtained through the
-#' minimum of the means of each two contiguous quantiles times of the AUC global tests.} 
-#' \item{localTest}{AUC local tests of the transition probability for each times and transitions.}
+#' \item{globalTest}{p-value of AUC global tests for each transition. These
+#' values are obtained through the minimum of the means of each two contiguous
+#' quantiles times of the AUC global tests.} 
+#' \item{localTest}{AUC local tests of the transition probability for each times
+#' and transitions.}
 #' \item{quantiles}{Quantiles times used for the AUC global tests.}
-#' \item{DIF}{Differences between the AJ and the LMAJ estimates for each transition probabilites from the 
-#' starting state until the receiving state given by only one replica where 's' represent each of the 
-#' quantile times.}  
+#' \item{times}{Times used for the AUC global tests.}
+#' \item{DIF}{Differences between the AJ and the LMAJ estimates for each
+#' transition probabilites from the starting state until the receiving state
+#' given by only one replica where 's' represent each of the quantile times.}  
 #' \item{from}{The starting state considered for the AUC global tests.}
 #' \item{to}{The last receiving state considered for the the AUC Local tests.}
-#' \item{ET.qiAll}{The lower limit of the diferences between the AJ and the LMAJ estimates given by the
-#' Monte Carlo simulation in each transition for each "s" quantile times. \code{ET.qi2All} means the same
-#' but missing values were replaced by the previous diferences of estimators.} 
-#' \item{ET.qsAll}{The upper limit of the diferences between the AJ and the LMAJ estimates given by the Monte
-#' Carlo simulation in each transition for each "s" quantile times. \code{ET.qs2All} means the same but
-#' missing values were replaced by the previous diferences of estimators.} 
+#' \item{ET.qiAll}{The lower limit of the diferences between the AJ and the LMAJ
+#' estimates given by the Monte Carlo simulation in each transition for each "s"
+#' quantile times. \code{ET.qi2All} means the same but missing values were
+#' replaced by the previous diferences of estimators.} 
+#' \item{ET.qsAll}{The upper limit of the diferences between the AJ and the LMAJ
+#' estimates given by the Monte Carlo simulation in each transition for each "s"
+#' quantile times. \code{ET.qs2All} means the same but missing values were
+#' replaced by the previous diferences of estimators.} 
 #' \item{replicas}{Number of replicas for the Monte Carlo simulation.}
 #' \item{limit}{Percentil of the times used in the AUC global tests.}
 #' 
@@ -52,7 +75,7 @@
 #' data("colonIDM")
 #' colonIDM$event1[colonIDM$time1==colonIDM$Stime & colonIDM$event1==1]<-0
 #' db_wide<-colonIDM
-
+#'
 #' positions<-list(c(2, 3), c(3), c())
 #' namesStates =  c("Alive", "Rec",  "Death")
 #' tmat <-transMatMSM(positions, namesStates)
@@ -60,8 +83,10 @@
 #' status=c(NA, "event1","event")
 #' trans = tmat
 #' db_long<- prepMSM(data=db_wide, trans, timesNames, status)
-#' res<-global.test(db_long, db_wide, from=1, to=3, replicas = 5, tmat=tmat)
-
+#' res1<-global.test(db_long, db_wide, from=1, to=3, replicas = 5, tmat=tmat)
+#' round(res1$globalTest,3)
+#' round(res1$localTests,3)
+#'
 #' data("ebmt4")
 #' db_wide <- ebmt4
 #' positions=list(c(2, 3, 5, 6), c(4, 5, 6), c(4, 5, 6), c(5, 6), c(6), c())
@@ -72,18 +97,27 @@
 #' trans = tmat
 #' db_long<- prepMSM(data=db_wide, trans, timesNames, status)
 #' 
-#' res2<-global.test(db_long, db_wide, from=2, to=3, quantiles=c(.05, .10, .20, .30, 0.40), 
-#'                 tmat = tmat, replicas = 10, positions=positions, namesStates=namesStates,
-#'                 timesNames=timesNames, status=status)
+#' res2<-global.test(db_long, db_wide, from=2, to=3, quantiles=c(.05, 0.10, .20,
+#' .30, 0.40), times=NULL, tmat = tmat, replicas = 10, positions=positions, 
+#'           namesStates=namesStates, timesNames=timesNames, status=status)
 #'                 
-#' library(mstate)
+#' round(res2$globalTest,3)
+#' 
+#' 
+#' times<-c(161.1, 365.4, 688.9, 1125.8,72.5)
+#' res3<-global.test(db_long, db_wide=NULL, from=1, to=6, quantiles=NULL, 
+#'       times=times, tmat = tmat, replicas = 10, positions=positions,
+#'       namesStates=namesStates, timesNames=timesNames, status=status)
+#' 
+#' library(mstate)   
 #' data(prothr)
 #' 
-#' res<-global.test(db_long = prothr, from=1, to=3, replicas=5, limit=0.90, 
+#' 
+#' res4<-global.test(db_long = prothr, from=1, to=3, replicas=5, limit=0.90, 
 #'         quantiles=c(.05, .10, .20, .30, 0.40))
 #'         
-#' round(res$localTests,4)
-
+#' round(res4$localTests,4)
+#'
 #' @author Gustavo Soutinho and Luis Meira-Machado.
 #'
 #' @importFrom "survidm" tprob markov.test 
@@ -98,6 +132,7 @@
 #' @export global.test
 #' @export local.test
 #' @export LR.tests
+#' @export Cox.globaltest
 #' @export prepMSM
 #' @export transMatMSM
 #' @export summary.markovMSM
@@ -107,12 +142,13 @@
 #' @S3method summary markovMSM
 #' @S3method print markovMSM
 
-global.test<- function(db_long, db_wide=NULL, from=1, to=3, quantiles=c(.05, .10, .20, .30, 0.40), 
-                         tmat=NULL, replicas=10, limit=0.90,
-                         positions=list(c(2, 3), c(3), c()),
-                         namesStates =  c("Alive", "Rec",  "Death"),
-                         timesNames = c(NA, "time1","Stime"),
-                         status=c(NA, "event1","event")){
+global.test<- function(db_long, db_wide=NULL, from=1, to=3, quantiles=c(.05, 
+                      .10, .20, .30, 0.40), times=NULL, 
+                       tmat=NULL, replicas=10, limit=0.90,
+                       positions=list(c(2, 3), c(3), c()),
+                       namesStates =  c("Alive", "Rec",  "Death"),
+                       timesNames = c(NA, "time1","Stime"),
+                       status=c(NA, "event1","event")){
   
   
   i<-from
@@ -143,22 +179,27 @@ global.test<- function(db_long, db_wide=NULL, from=1, to=3, quantiles=c(.05, .10
   
   ET.qs2All<-NULL
   
-  for(h in 1:length(quantiles)){
+  times<-sort(times)
+  
+  if(is.null(quantiles) & is.null(times)){
     
-    #h<-1
+    stop("One of the arguments quantiles or times must be NULL.")
+  }
+  
+  if(!is.null(quantiles) & !is.null(times)){
     
-    print(h)
+    stop("Only one of the arguments quantiles or times must be NULL.")
+  }
+  
+  if(length(times)!=5 & !is.null(times)){
     
-    #for(i3 in 1:length(colnames(db_wide))){
+    stop("The length of times must be 5.")
     
-    #i3<-1
-    
-    #  if (colnames(db_wide)[i3]==timeToQuantiles)
-    
-    #    indexS<-i3
-    #}
-    #s<-as.numeric(quantile(db_wide[,indexS], quantiles))[h]
-    
+  }
+  
+  #min e quantile 0.75
+  
+  if(!is.null(times)){
     
     if(!is.null(db_wide)){
       
@@ -166,13 +207,14 @@ global.test<- function(db_long, db_wide=NULL, from=1, to=3, quantiles=c(.05, .10
         
         timeToQuantiles<-timesNames[2]
         
-        s<-as.numeric(quantile(db_wide[, timeToQuantiles], quantiles))[h]
+        min<-min(as.numeric(db_wide[, timeToQuantiles]))
         
-        s_quant<-as.numeric(quantile(db_wide[, timeToQuantiles], quantiles))
+        val0.75<-as.numeric(quantile(db_wide[, timeToQuantiles], 0.75))
         
-      }else{
         
-        if(i==1){
+      }else{#inicio difere de 3
+        
+        if(i==1){#from
           
           #head(db_wide)
           
@@ -193,25 +235,137 @@ global.test<- function(db_long, db_wide=NULL, from=1, to=3, quantiles=c(.05, .10
           valToQuantiles<-valToQuantiles[valToQuantiles!=0] 
         }
         
-        s<-as.numeric(quantile(valToQuantiles, quantiles))[h]
+        min<-min(as.numeric(valToQuantiles))
         
-        s_quant<-as.numeric(quantile(valToQuantiles, quantiles))
-      }
+        val0.75<-as.numeric(quantile(valToQuantiles, 0.75))
+        
+      }#fim de casos em que length(names) difere de 3
       
-    }else{
-      
-      #head(db_long)
+    }else{#caso db_wide=NULL
       
       tempQ<-unique(db_long$Tstop)
       
-      #summary(tempQ)
+      min<-min(as.numeric(tempQ))
       
-      s<-as.numeric(quantile(tempQ, quantiles))[h]
+      val0.75<-as.numeric(quantile(tempQ, 0.75))
       
-      tmat <- attr(db_long, "trans")
+    }
+    
+    if(length(which(times<val0.75 & times>min & !is.null(times)))!=5){
       
-      s_quant<-as.numeric(quantile(tempQ, quantiles))
+      stop("All the times must be greater than the minumum time and the third quantile of time.")
       
+    }
+    
+  }
+  
+  #
+  
+  if(is.null(times))
+    
+    times.to.test<-length(quantiles)
+  
+  if(is.null(quantiles))
+    
+    times.to.test<-length(times)
+  
+  for(h in 1:times.to.test){
+    
+    #h<-1
+    
+    print(h)
+    
+    #for(i3 in 1:length(colnames(db_wide))){
+    
+    #i3<-1
+    
+    #  if (colnames(db_wide)[i3]==timeToQuantiles)
+    
+    #    indexS<-i3
+    #}
+    #s<-as.numeric(quantile(db_wide[,indexS], quantiles))[h]
+    
+    
+    if(!is.null(db_wide)){
+      
+      if(length(namesStates)==3){
+        
+        if(is.null(times)){
+          
+          timeToQuantiles<-timesNames[2]
+          
+          s<-as.numeric(quantile(db_wide[, timeToQuantiles], quantiles))[h]
+          
+          s_quant<-as.numeric(quantile(db_wide[, timeToQuantiles], quantiles))
+          
+        }else{
+          
+          
+          s<-as.numeric(times)[h]
+          s_quant<-as.numeric(times)
+          
+        }
+        
+      }else{ #inicio difere de 3
+        
+        if(is.null(times)){
+          if(i==1){#from
+            
+            #head(db_wide)
+            
+            valToQuantiles<-rep(0,nrow(db_wide))
+            
+            for(a1 in 1:nrow(db_wide)){
+              
+              #a1<-1
+              
+              valToQuantiles[a1]<-min(db_wide[a1, timesNames[-1]])
+              
+            }
+            valToQuantiles<-valToQuantiles[valToQuantiles!=0] 
+            
+          }else{
+            
+            valToQuantiles<-db_wide[,timesNames[i]]
+            valToQuantiles<-valToQuantiles[valToQuantiles!=0] 
+          }
+          
+          s<-as.numeric(quantile(valToQuantiles, quantiles))[h]
+          
+          s_quant<-as.numeric(quantile(valToQuantiles, quantiles))
+          
+        }else{
+          s<-as.numeric(times)[h]
+          s_quant<-as.numeric(times)
+          
+        }
+        
+        
+      }#fim de casos em que length(names) difere de 3
+      
+    }else{#caso db_wide=NULL
+      
+      
+      if(is.null(times)){
+        
+        #head(db_long)
+        
+        tempQ<-unique(db_long$Tstop)
+        
+        #summary(tempQ)
+        
+        s<-as.numeric(quantile(tempQ, quantiles))[h]
+        
+        tmat <- attr(db_long, "trans")
+        
+        s_quant<-as.numeric(quantile(tempQ, quantiles))
+        
+      }else{
+        
+        s<-as.numeric(times)[h]
+        s_quant<-as.numeric(times)
+        
+      }
       
     }
     
@@ -431,10 +585,6 @@ global.test<- function(db_long, db_wide=NULL, from=1, to=3, quantiles=c(.05, .10
       }
       
       #
-      
-      
-      
-      
     } 
     
     sd_areasBoot<-rep(0, j) # ncol(resAJ$trans)
@@ -581,7 +731,15 @@ global.test<- function(db_long, db_wide=NULL, from=1, to=3, quantiles=c(.05, .10
   
   minAll<-rep(0, j)
   
-  minInt<-rep(0, (length(quantiles)-1))
+  if(is.null(times)){
+    
+    minInt<-rep(0, (length(quantiles)-1))
+    
+  }else{
+    
+    minInt<-rep(0, (length(times)-1))
+  }
+  
   
   for (i2 in 1:j){
     
@@ -656,11 +814,20 @@ global.test<- function(db_long, db_wide=NULL, from=1, to=3, quantiles=c(.05, .10
     minAllf<-minAll
   }
   
+  if(is.null(times)){
+    res <-list(globalTest=minAllf, localTests=p.value.f2, 
+               quantiles=as.numeric(s_quant), times=NULL, DIF=DIF, from=from, to=to,
+               ET.qiAll=ET.qiAll, ET.qi2All=ET.qi2All, ET.qsAll=ET.qsAll, ET.qs2All=ET.qs2All,
+               replicas=M, limit=limit)
+  }else{
+    
+    res <-list(globalTest=minAllf, localTests=p.value.f2, 
+               quantiles=NULL,times=times, DIF=DIF, from=from, to=to,
+               ET.qiAll=ET.qiAll, ET.qi2All=ET.qi2All, ET.qsAll=ET.qsAll, ET.qs2All=ET.qs2All,
+               replicas=M, limit=limit)
+  }
   
-  res <-list(globalTest=minAllf, localTests=p.value.f2, 
-             quantiles=as.numeric(s_quant), DIF=DIF, from=from, to=to,
-             ET.qiAll=ET.qiAll, ET.qi2All=ET.qi2All, ET.qsAll=ET.qsAll, ET.qs2All=ET.qs2All,
-             replicas=M, limit=limit)
+  
   
   class(res) <- c("globalTest", "markovMSM")
   

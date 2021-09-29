@@ -1,19 +1,24 @@
 #' Plot for an object of class "markovMSM"
 #'
-#' @description Plots for the visual inspection for checking the Markov condition through the difference 
-#' between the AJ and LMAJ from a starting time of the transition probabilities for each transition.
+#' @description Plots for the visual inspection for checking the Markov condition
+#' through the difference between the AJ and LMAJ from a starting time of the
+#' transition probabilities for each transition.
 #' 
-#' @param x A dataframe in long format in case of the plot with the differences between AJ and LMAJ estimators
-#' or a object of class "markovMSM" with the results of the global.test or local.test function.
+#' @param x A dataframe in long format in case of the plot with the differences
+#' between AJ and LMAJ estimators or a object of class "markovMSM" with the
+#' results of the global.test or local.test function.
 #' @param y Parameter with the value NULL.
-#' @param quantileOrder Order of the quantil used in the formula of the AUC global test.
-#' @param tran Transition probability from the starting state. Example: if objet 'from' of global is equal
-#' 1 then tran='pstate2' means the results of the plot correspond to the difference between AJ and LMAJ
-#' estimates of transition probabilites of the transition 1->2.
+#' @param quantileOrder Order of the quantil used in the formula of the AUC
+#' global test.
+#' @param tran Transition probability from the starting state. Example: if objet
+#' 'from' of global is equal 1 then tran='pstate2' means the results of the plot
+#' correspond to the difference between AJ and LMAJ estimates of transition
+#' probabilites of the transition 1->2.
 #' @param axis.scale Limit of the y axis of the plots.
-#' @param difP Type of plot representing in case of x means the results of the Localtest. If difP='True' plot 
-#'       depicts the discrepancies between AJ and LMAJ estimators.  If difP='False' plot show the AJ and 
-#'       the LMAJ estimates. By default difP='False'.
+#' @param difP Type of plot representing in case of x means the results of the
+#' Localtest. If difP=TRUE plot depicts the discrepancies between AJ and LMAJ
+#' estimators.  If difP=FALSE plot show the AJ and the LMAJ estimates. 
+#' By default difP=FALSE.
 #' @param ... For future methods.
 #' 
 #' @return No value is returned.
@@ -26,27 +31,27 @@
 #' 
 #' res<-local.test(db_long=prothr, times=30, from=1, to=3, replicas=5)
 #' 
-#' plotMSM(x=res, tran='pstate2', axis.scale=c(-0.25,.25), difP='True')
+#' plotMSM(x=res, tran='pstate2', axis.scale=c(-0.25,.25), difP=TRUE)
 #'
-#' plotMSM(x=res, tran='pstate2', axis.scale=c(0,.25), difP='False')
+#' plotMSM(x=res, tran='pstate2', axis.scale=c(0,.25), difP=FALSE)
 #'
-#' res2<-global.test(db_long=prothr, db_wide = NULL, from=1, to=3, replicas=5, limit=0.90, 
+#' res2<-global.test(db_long=prothr, db_wide = NULL, from=1, to=3, replicas=5,
+#' limit=0.90, 
 #'                  quantiles=c(.05, .10, .20, .30, 0.40))
 #'
 #' plotMSM(x=res, quantileOrder=3, tran='pstate2', axis.scale=c(-0.05,.15))
 #' 
 #' @author Gustavo Soutinho and Luis Meira-Machado.
-#' 
-#' 
+
 
 plotMSM<- function(x = object, y = NULL, quantileOrder=NULL, tran='pstate2', 
-                          axis.scale=c(-1, 1), difP='False',...){
+                          axis.scale=c(-1, 1), difP=FALSE,...){
   
   object <- x
   
   z<-object
   
-  if(inherits(z, "markovMSM") & class(z)[1] =='localTest' & difP=='True'){
+  if(inherits(z, "markovMSM") & class(z)[1] =='localTest' & difP==TRUE){
     
     s<-z$times
     
@@ -99,7 +104,7 @@ plotMSM<- function(x = object, y = NULL, quantileOrder=NULL, tran='pstate2',
     
   }
   
-  if(inherits(z, "markovMSM") & class(z)[1] =='localTest' & difP=='False'){
+  if(inherits(z, "markovMSM") & class(z)[1] =='localTest' & difP==FALSE){
     
     
     for(c in 1:ncol(z$AJall)){
