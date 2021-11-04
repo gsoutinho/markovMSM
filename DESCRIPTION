@@ -1,0 +1,40 @@
+Package: markovMSM
+Type: Package
+Title: Methods for Checking the Markov Condition in Multi-State Survival Data
+Version: 0.1.0
+Authors@R: c(
+	person(
+		given = "Gustavo",
+		family = "Soutinho",
+		role = c("aut", "cre"),
+		email = "gustavosoutinho@sapo.pt",
+		comment = c(ORCID = "0000-0002-0559-1327")
+	),
+	person(
+		given = "Luis",
+		family = "Meira-Machado",
+		role = "aut",
+		email = "lmachado@math.uminho.pt",
+		comment = c(ORCID = "0000-0002-8577-7665")
+	)
+	)
+Description: The inference in multi-state models is traditionally performed under
+             a Markov assumption that claims that past and future of the process
+             are independent given the present state. In this package, we 
+             consider tests of the Markov assumption that are applicable to 
+             general multi-state models. Three approaches using existing 
+             methodology are considered: a simple method based on including
+             covariates depending on the history in Cox models for the transition
+             intensities; methods based on measuring the discrepancy of the 
+             non-Markov estimators of the transition probabilities to the 
+             Markov Aalen-Johansen estimators; and, finally, methods that were
+             developed by considering summaries from families of log-rank 
+             statistics where patients are grouped by the state occupied of the
+             process at a particular time point.
+License: GPL-3
+Depends: R (>= 3.5.0)
+Imports: survidm, survival, mstate
+RoxygenNote: 7.1.2
+Encoding: UTF-8
+LazyData: true
+

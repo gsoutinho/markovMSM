@@ -1,0 +1,10 @@
+^CRAN-RELEASE$
+^.*\.Rproj$
+^\.Rproj\.user$
+^\.travis\.yml$
+^README\.Rmd$
+^README\.html$
+^README-.*\.png$
+^README_ini\.md$
+^cran-comments\.md$
+^script\.R$
